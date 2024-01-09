@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "skolegpt-instruct-dataset"
+version = "0.1.0"
+description = "Synthetic Danish instruction dataset for SkoleGPT."
+authors = ["Kasper Junge"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+datasets = "^2.16.1"
+tiktoken = "^0.5.2"
+python-dotenv = "^1.0.0"
+polars = "^0.20.3"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.28.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
