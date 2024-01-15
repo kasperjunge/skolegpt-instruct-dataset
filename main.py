@@ -28,7 +28,6 @@ def main() -> None:
         common_prefixes=config.common_prefixes,
         seed=config.seed,
     )
-    df.write_parquet("orca_sample_preprocessed.parquet")
 
 
 if __name__ == "__main__":
