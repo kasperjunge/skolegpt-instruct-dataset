@@ -47,9 +47,3 @@ def translate_with_deepl(text, target_lang):
     else:
         # Return an error message if the request was not successful
         return f"Error: {response.status_code} - {response.text}"
-
-
-# Example usage:
-# Replace 'YOUR_API_KEY' with your actual DeepL API key
-# translated_text = translate_with_deepl("Hello, world!", "DE", "YOUR_API_KEY")
-# print(translated_text)
