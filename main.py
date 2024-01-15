@@ -19,8 +19,6 @@ def main() -> None:
         df = get_data(n_max=config.n_max)
         df.write_parquet(cache_file)
 
-    breakpoint()
-
     # preprocess
     df = preprocess_data(
         df=df,
@@ -30,6 +28,7 @@ def main() -> None:
         common_prefixes=config.common_prefixes,
         seed=config.seed,
     )
+    df.write_parquet("orca_sample_preprocessed.parquet")
 
 
 if __name__ == "__main__":

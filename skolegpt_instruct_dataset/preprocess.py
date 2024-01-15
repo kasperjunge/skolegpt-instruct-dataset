@@ -11,10 +11,16 @@ def preprocess_data(
 ) -> pl.DataFrame:
     """Preprocess data sample from the OpenOrca dataset."""
 
+    # ---------------------------------------------------------------------------- #
+    #                               Filter Questions                               #
+    # ---------------------------------------------------------------------------- #
+
     # Attempt to remove translation instructions
+    print("Removing translate instructions..")
     df = df.filter(~df["question"].str.to_lowercase().str.contains("translate"))
 
-    # Remove prefixes
+    # Remove prefixes from strings
+    print("Removing common question prefixes..")
     for prefix in common_prefixes:
         df = df.with_columns(
             df["question"].map_elements(
@@ -22,7 +28,8 @@ def preprocess_data(
             )
         )
 
-    # Remove postfixes
+    # Remove postfixes from strings
+    print("Removing common question postfixes..")
     for postfix in common_postfixes:
         df = df.with_columns(
             df["question"].map_elements(
@@ -31,6 +38,7 @@ def preprocess_data(
         )
 
     # Remove remaining examples with common pre- and postfixes
+    print("Removing remaining questions with common pre- and postfixes..")
     prefix_pattern = "^(%s)" % "|".join([prefix.lower() for prefix in common_prefixes])
     postfix_pattern = "(%s)$" % "|".join(
         [postfix.lower() for postfix in common_postfixes]
@@ -41,7 +49,12 @@ def preprocess_data(
             ~df["question"].str.strip_chars().str.to_lowercase().str.contains(pattern)
         )
 
+    # ---------------------------------------------------------------------------- #
+    #                        Stratify by Instruction Sources                       #
+    # ---------------------------------------------------------------------------- #
+
     # Stratify by source
+    print("Stratifying dataset by instruction source..")
     df = stratify_dataframe(
         df=df,
         n_total=n_total,
