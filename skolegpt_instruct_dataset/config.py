@@ -1,6 +1,6 @@
 class Config:
     seed: int = 42
-    n_max: int = 3000000  # number of raw samples from OpenOrca dataset
+    n_max: int = 3500000  # number of raw samples from OpenOrca dataset
     n_total: int = 90000  # number of examples in final Danish translated dataset
     instruction_sources: list[str] = [
         "flan",
@@ -19,6 +19,7 @@ class Config:
         "Student:",
         "Write a sentence not in English.",
         "Denny asked:",
+        "Choose your answer:",
     ]
     common_postfixes: list[str] = [
         "Answer:",
@@ -39,6 +40,17 @@ class Config:
         "The answer is:",
         "Me:",
         "Some thinking first:",
+        "Some random thoughts:",
+        "Let's solve step-by-step:",
+        "Numbered answers:",
+        "Let's answer step by step:",
+        "The answer to this question is:",
+        "Explanation:",
+        "Teacher: Let's think:",
+        "Let's think:",
+        "Chain of thought:",
+        "Your thoughts:",
+        "Summary:",
     ]
 
 
