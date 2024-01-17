@@ -20,6 +20,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------- #
     #                                   Get Data                                   #
     # ---------------------------------------------------------------------------- #
+
     print("Step 1: Get Data..")
     start_time = time.time()
     if cache_file.is_file() & use_cache:
@@ -32,6 +33,7 @@ def main() -> None:
     # ---------------------------------------------------------------------------- #
     #                                Preprocess Data                               #
     # ---------------------------------------------------------------------------- #
+
     print("\nStep 2: Preprocess Data..")
     start_time = time.time()
     if cache_file_preprocessed.is_file() & use_cache:
