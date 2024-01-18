@@ -29,6 +29,9 @@ class Config:
         "Write a sentence not in English.",
         "Denny asked:",
         "Choose your answer:",
+        "Answer the following question:",
+        "Given the question:",
+        "Please answer the following question:",
     ]
     common_postfixes: list[str] = [
         "Answer:",

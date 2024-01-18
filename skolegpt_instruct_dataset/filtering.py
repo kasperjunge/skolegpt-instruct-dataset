@@ -16,12 +16,27 @@ def filter_data(
     """Preprocess raw OpenOrca dataset."""
 
     original_dataset_size = len(df)
+    print(
+        "Starting filter_data function. Original dataset size:", original_dataset_size
+    )
 
     df = remove_translation_instructions(df)
+    print("Completed removing translation instructions.")
+
     df = remove_common_pre_postfixes(df, common_prefixes, common_postfixes)
+    print("Completed removing common prefixes and postfixes.")
+
     df = remove_questions_ending_with_colon(df)
+    print("Completed removing questions ending with a colon.")
+
     df = remove_multiple_choice_questions(df)
+    print("Completed removing multiple choice questions.")
+
     df = basic_cleaning(df)
+    print("Completed basic cleaning.")
+
+    df = remove_exotic_chars(df)
+    print("Completed removing examples with exotic characters.")
 
     report_percent_removed(df, original_dataset_size)
 
@@ -31,6 +46,7 @@ def filter_data(
         instruction_sources=instruction_sources,
         seed=seed,
     )
+    print("Completed stratifying dataframe.")
 
     return df
 
@@ -43,26 +59,6 @@ def filter_data(
 def remove_translation_instructions(df):
     # Hard filter on "translate"
     df = df.filter(~df["question"].str.to_lowercase().str.contains("translate"))
-
-    # Filter questions and responses with exotic chars
-    def contains_characters(text, characters):
-        for char in characters:
-            if char in text:
-                return True
-        return False
-
-    filter_chars = return_filter_char_list(df=df)
-
-    df = df.filter(
-        ~df["question"].map_elements(
-            lambda x: contains_characters(text=x, characters=filter_chars)
-        )
-    )
-    df = df.filter(
-        ~df["response"].map_elements(
-            lambda x: contains_characters(text=x, characters=filter_chars)
-        )
-    )
     return df
 
 
@@ -135,4 +131,27 @@ def stratify_dataframe(
         ]
     )
 
+    return df
+
+
+def remove_exotic_chars(df: pl.DataFrame) -> pl.DataFrame:
+    # Filter questions and responses with exotic chars
+    def contains_characters(text, characters):
+        for char in characters:
+            if char in text:
+                return True
+        return False
+
+    filter_chars = return_filter_char_list(df=df)
+
+    df = df.filter(
+        ~df["question"].map_elements(
+            lambda x: contains_characters(text=x, characters=filter_chars)
+        )
+    )
+    df = df.filter(
+        ~df["response"].map_elements(
+            lambda x: contains_characters(text=x, characters=filter_chars)
+        )
+    )
     return df

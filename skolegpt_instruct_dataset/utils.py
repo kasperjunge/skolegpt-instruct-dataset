@@ -91,7 +91,7 @@ def return_filter_char_list(df: pl.DataFrame) -> list[str]:
     """
     filter_chars = filter_chars.replace("\n", "").replace(" ", "")
     filter_chars = sorted(list(set(filter_chars)))
-    most_common_chars = get_n_most_common_chars(df=df, n=10000)
+    most_common_chars = get_n_most_common_chars(df=df.sample(config.n_total), n=10000)
     filter_chars = [x for x in filter_chars if x not in most_common_chars]
     return filter_chars
 
@@ -100,14 +100,26 @@ def get_n_most_common_chars(df: pl.DataFrame, n: int = 10000) -> list[str]:
     def flatten(xss):
         return [x for xs in xss for x in xs]
 
+    print("Starting to flatten and combine characters from columns.")
     all_chrs = flatten(
         df["question"].str.to_lowercase().to_list()
         + df["response"].str.to_lowercase().to_list()
         + df["system_prompt"].str.to_lowercase().to_list()
     )
+    print("Completed flattening and combining characters.")
+
+    print("Starting to count character occurrences.")
     char_count = pl.Series(all_chrs).value_counts()
+    print("Completed counting character occurrences.")
+
+    print("Converting to pandas DataFrame and sorting.")
     char_frq = char_count.to_pandas().sort_values(by="count")
+    print("Completed conversion and sorting.")
+
+    print(f"Selecting characters with occurrences more than {n}.")
     most_common_chars = char_frq[char_frq["count"] > n][""].tolist()
+    print("Completed selecting most common characters.")
+
     return most_common_chars
 
 
