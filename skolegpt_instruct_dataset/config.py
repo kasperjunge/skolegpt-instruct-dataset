@@ -1,7 +1,16 @@
+import pathlib
+
+data_dir = pathlib.Path(__file__).parents[1] / "data"
+
+
 class Config:
     seed: int = 42
     n_max: int = 3500000  # number of raw samples from OpenOrca dataset
     n_total: int = 90000  # number of examples in final Danish translated dataset
+    data_dir: pathlib.Path = data_dir
+    sampled_dataset_file_name: str = "sampled_dataset.parquet"
+    filtered_dataset_file_name: str = "filtered_dataset.parquet"
+    translated_dataset: str = "translated_dataset.parquet"
     instruction_sources: list[str] = [
         "flan",
         "niv",

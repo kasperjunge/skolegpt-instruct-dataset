@@ -1,5 +1,6 @@
 import textwrap
 import time
+from pathlib import Path
 
 import polars as pl
 
@@ -108,3 +109,37 @@ def get_n_most_common_chars(df: pl.DataFrame, n: int = 10000) -> list[str]:
     char_frq = char_count.to_pandas().sort_values(by="count")
     most_common_chars = char_frq[char_frq["count"] > n][""].tolist()
     return most_common_chars
+
+
+# ---------------------------------------------------------------------------- #
+#                                  Path Stuff                                  #
+# ---------------------------------------------------------------------------- #
+
+
+def create_directory_if_not_exists(directory_path):
+    path = Path(directory_path)
+    if not path.exists():
+        path.mkdir(parents=True, exist_ok=True)
+        print(f"Directory created: {directory_path}")
+    else:
+        print(f"Directory already exists: {directory_path}")
+
+
+def load_parquet_file_with_polars(file_path):
+    """
+    Loads a Parquet file using Polars.
+
+    Args:
+    file_path (str): Path to the Parquet file to be loaded.
+
+    Returns:
+    polars.DataFrame: Contents of the Parquet file.
+
+    Raises:
+    FileNotFoundError: If the Parquet file does not exist.
+    """
+    path = Path(file_path)
+    if not path.is_file():
+        raise FileNotFoundError(f"Parquet file not found: {file_path}")
+
+    return pl.read_parquet(file_path)

@@ -5,7 +5,7 @@ import polars as pl
 from .utils import return_filter_char_list
 
 
-def preprocess_data(
+def filter_data(
     df: pl.DataFrame,
     n_total: int,
     instruction_sources: list[str],

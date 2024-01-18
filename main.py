@@ -5,7 +5,7 @@ import polars as pl
 
 from skolegpt_instruct_dataset.config import config
 from skolegpt_instruct_dataset.data import get_data
-from skolegpt_instruct_dataset.preprocess import preprocess_data
+from skolegpt_instruct_dataset.filtering import preprocess_data
 from skolegpt_instruct_dataset.utils import print_elapsed_time
 
 
