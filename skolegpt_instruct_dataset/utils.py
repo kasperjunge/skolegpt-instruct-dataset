@@ -155,3 +155,62 @@ def load_parquet_file_with_polars(file_path):
         raise FileNotFoundError(f"Parquet file not found: {file_path}")
 
     return pl.read_parquet(file_path)
+
+
+def count_total_characters(df):
+    """
+    Counts the total number of characters in the columns 'question', 'response', and 'system_prompt' of a Polars DataFrame.
+
+    Parameters:
+    df (polars.DataFrame): The dataframe to process.
+
+    Returns:
+    int: The total number of characters in the specified columns.
+    """
+    # Check if the specified columns exist in the DataFrame
+    for column in ["question", "response", "system_prompt"]:
+        if column not in df.columns:
+            raise ValueError(f"Column '{column}' not found in the DataFrame")
+
+    # Calculate the sum of character lengths for each specified column
+    total_characters = sum(
+        df.select(
+            [
+                pl.col(column).str.len_chars().sum()
+                for column in ["question", "response", "system_prompt"]
+            ]
+        )
+    )
+
+    return total_characters.item()
+
+
+def estimate_translated_dataset_size_given_budget(
+    df: pl.DataFrame,
+    max_budget_in_eur: int,
+):
+    """
+    Estimates the number of dataset entries that can be translated by DeepL within a given budget.
+
+    This function calculates the total number of characters across specific columns ('question',
+    'response', and 'system_prompt') in a Polars DataFrame, and then estimates how many dataset
+    entries can be translated based on a specified budget and a fixed translation cost.
+
+    Parameters:
+    df (polars.DataFrame): The dataframe containing the dataset to be translated.
+                           It must have the columns 'question', 'response', and 'system_prompt'.
+    max_budget_in_eur (int): The maximum budget available for translation, in euros.
+
+    Returns:
+    int: The estimated number of dataset entries that can be translated within the given budget.
+
+    Note:
+    - The function assumes uniform distribution of characters across dataset entries.
+    """
+    price_pr_million_chars = 20
+    total_char_count = count_total_characters(df)
+    chars_pr_example = total_char_count / len(df)
+
+    budgeted_chars = (max_budget_in_eur // price_pr_million_chars) * 1000000
+
+    return budgeted_chars // chars_pr_example

@@ -5,7 +5,12 @@ from datasets import load_dataset
 def get_data(n_max: int, seed: int = 42) -> pl.DataFrame:
     """Get subset of OpenOrca dataset."""
 
-    ds = load_dataset("Open-Orca/OpenOrca", streaming=True, split="train")
+    ds = load_dataset(
+        "Open-Orca/OpenOrca",
+        streaming=True,
+        split="train",
+        data_files="1M-GPT4-Augmented.parquet",
+    )
     ds = ds.shuffle(seed=seed)
 
     examples = []

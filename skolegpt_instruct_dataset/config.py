@@ -10,6 +10,7 @@ class Config:
     data_dir: pathlib.Path = data_dir
     sampled_dataset_file_name: str = "sampled_dataset.parquet"
     filtered_dataset_file_name: str = "filtered_dataset.parquet"
+    stratified_dataset_file_name: str = "stratified_dataset.parquet"
     translated_dataset: str = "translated_dataset.parquet"
     instruction_sources: list[str] = [
         "flan",

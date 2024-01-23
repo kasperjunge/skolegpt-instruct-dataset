@@ -23,3 +23,13 @@ poetry run python filter_dataset.py
 ```bash
 poetry run python translate_dataset.py
 ```
+## Dataset Description
+### Instruction Pre-and Postfixes
+
+Normalized Frequency	Frequency	Term
+6.48517%	226981	'Question:'
+0.65466%	22913	'Definition:'
+1.30737%	45758	'Detailed Instructions:'
+0.65511%	22929	'Instructions:'
+7.51428%	263000	'Q:'
+0.65137%	22798	'Teacher:'

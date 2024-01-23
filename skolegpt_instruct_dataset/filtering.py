@@ -40,14 +40,6 @@ def filter_data(
 
     report_percent_removed(df, original_dataset_size)
 
-    df = stratify_dataframe(
-        df=df,
-        n_total=n_total,
-        instruction_sources=instruction_sources,
-        seed=seed,
-    )
-    print("Completed stratifying dataframe.")
-
     return df
 
 
@@ -121,15 +113,39 @@ def stratify_dataframe(
     instruction_sources: list[str],
     seed: int,
 ) -> pl.DataFrame:
-    """Stratify instruction examples according to instruction source (niv, flan, t0, cot)."""
+    """Stratify instruction examples according to instruction source."""
     n_sources = len(instruction_sources)
+    samples_per_source = n_total // n_sources
 
-    df = pl.concat(
-        [
-            df.filter(df["source"] == source).sample(n_total / n_sources, seed=seed)
+    sampled_dfs = []
+    remaining_n_total = n_total
+
+    # First, sample from sources with enough data
+    for source in instruction_sources:
+        source_df = df.filter(df["source"] == source)
+        n_source = source_df.height
+        n_sample = min(samples_per_source, n_source)
+        sampled_dfs.append(source_df.sample(n_sample, seed=seed))
+        remaining_n_total -= n_sample
+
+    # Distribute remaining samples if necessary
+    if remaining_n_total > 0:
+        remaining_sources = [
+            source
             for source in instruction_sources
+            if df.filter(df["source"] == source).height > samples_per_source
         ]
-    )
+        additional_samples_per_source = (
+            remaining_n_total // len(remaining_sources) if remaining_sources else 0
+        )
+
+        for source in remaining_sources:
+            source_df = df.filter(df["source"] == source)
+            n_source = source_df.height - samples_per_source
+            n_additional_sample = min(additional_samples_per_source, n_source)
+            sampled_dfs.append(source_df.sample(n_additional_sample, seed=seed))
+
+    df = pl.concat(sampled_dfs)
 
     return df
 
