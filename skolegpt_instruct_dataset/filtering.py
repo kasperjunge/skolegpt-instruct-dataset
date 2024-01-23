@@ -7,11 +7,8 @@ from .utils import return_filter_char_list
 
 def filter_data(
     df: pl.DataFrame,
-    n_total: int,
-    instruction_sources: list[str],
     common_prefixes: list[str],
     common_postfixes: list[str],
-    seed: int,
 ) -> pl.DataFrame:
     """Preprocess raw OpenOrca dataset."""
 
@@ -21,24 +18,15 @@ def filter_data(
     )
 
     df = remove_translation_instructions(df)
-    print("Completed removing translation instructions.")
-
     df = remove_common_pre_postfixes(df, common_prefixes, common_postfixes)
-    print("Completed removing common prefixes and postfixes.")
-
     df = remove_questions_ending_with_colon(df)
-    print("Completed removing questions ending with a colon.")
-
     df = remove_multiple_choice_questions(df)
-    print("Completed removing multiple choice questions.")
-
     df = basic_cleaning(df)
-    print("Completed basic cleaning.")
-
     df = remove_exotic_chars(df)
-    print("Completed removing examples with exotic characters.")
+    df = remove_duplicate_questions_and_responses(df)
 
-    report_percent_removed(df, original_dataset_size)
+    percent_removed = round(100 * (1 - len(df) / original_dataset_size), 4)
+    print(f"{percent_removed} % of dataset removed after preprocessing.")
 
     return df
 
@@ -102,54 +90,6 @@ def basic_cleaning(df):
     return df
 
 
-def report_percent_removed(df, original_size):
-    percent_removed = round(100 * (1 - len(df) / original_size), 4)
-    print(f"{percent_removed} % of dataset removed after preprocessing.")
-
-
-def stratify_dataframe(
-    df: pl.DataFrame,
-    n_total: int,
-    instruction_sources: list[str],
-    seed: int,
-) -> pl.DataFrame:
-    """Stratify instruction examples according to instruction source."""
-    n_sources = len(instruction_sources)
-    samples_per_source = n_total // n_sources
-
-    sampled_dfs = []
-    remaining_n_total = n_total
-
-    # First, sample from sources with enough data
-    for source in instruction_sources:
-        source_df = df.filter(df["source"] == source)
-        n_source = source_df.height
-        n_sample = min(samples_per_source, n_source)
-        sampled_dfs.append(source_df.sample(n_sample, seed=seed))
-        remaining_n_total -= n_sample
-
-    # Distribute remaining samples if necessary
-    if remaining_n_total > 0:
-        remaining_sources = [
-            source
-            for source in instruction_sources
-            if df.filter(df["source"] == source).height > samples_per_source
-        ]
-        additional_samples_per_source = (
-            remaining_n_total // len(remaining_sources) if remaining_sources else 0
-        )
-
-        for source in remaining_sources:
-            source_df = df.filter(df["source"] == source)
-            n_source = source_df.height - samples_per_source
-            n_additional_sample = min(additional_samples_per_source, n_source)
-            sampled_dfs.append(source_df.sample(n_additional_sample, seed=seed))
-
-    df = pl.concat(sampled_dfs)
-
-    return df
-
-
 def remove_exotic_chars(df: pl.DataFrame) -> pl.DataFrame:
     # Filter questions and responses with exotic chars
     def contains_characters(text, characters):
@@ -171,3 +111,60 @@ def remove_exotic_chars(df: pl.DataFrame) -> pl.DataFrame:
         )
     )
     return df
+
+
+def remove_duplicate_questions_and_responses(df: pl.DataFrame) -> pl.DataFrame:
+    # remove duplicated reponse and questions
+    df = df.unique(subset=["response"], keep="first")
+    df = df.unique(subset=["question"], keep="first")
+    return df
+
+
+# ---------------------------------------------------------------------------- #
+#                                Stratification                                #
+# ---------------------------------------------------------------------------- #
+def stratify_dataframe(
+    df: pl.DataFrame,
+    n_total: int,
+    instruction_sources: list[str],
+    seed: int,
+) -> pl.DataFrame:
+    # Calculate the ideal number of samples from each source for a balanced dataset
+    samples_per_source = n_total // len(instruction_sources)
+
+    # Calculate counts of each source in the dataframe
+    source_counts = df["source"].value_counts()
+
+    # Identify sources with fewer samples than the ideal number
+    underrepresented_sources = source_counts.filter(
+        source_counts["count"] < samples_per_source
+    ).rows()
+
+    # Identify sources with enough or more samples than the ideal number
+    sufficiently_represented_sources = source_counts.filter(
+        source_counts["count"] >= samples_per_source
+    ).rows()
+
+    additional_samples_needed = 0
+    for source_count in underrepresented_sources:
+        additional_samples_needed += samples_per_source - source_count[1]
+
+    samples_per_source += additional_samples_needed // len(
+        sufficiently_represented_sources
+    )
+
+    combined_samples = []
+
+    # Include all samples from underrepresented sources
+    for source in underrepresented_sources:
+        combined_samples.append(df.filter(df["source"] == source[0]))
+
+    # Randomly sample from sufficiently represented sources
+    for source in sufficiently_represented_sources:
+        combined_samples.append(
+            df.filter(df["source"] == source[0]).sample(samples_per_source, seed=seed)
+        )
+
+    stratified_df = pl.concat(combined_samples)
+
+    return stratified_df

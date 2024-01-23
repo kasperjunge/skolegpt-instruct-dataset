@@ -134,7 +134,7 @@ def create_directory_if_not_exists(directory_path):
         path.mkdir(parents=True, exist_ok=True)
         print(f"Directory created: {directory_path}")
     else:
-        print(f"Directory already exists: {directory_path}")
+        pass
 
 
 def load_parquet_file_with_polars(file_path):
@@ -159,7 +159,7 @@ def load_parquet_file_with_polars(file_path):
 
 def count_total_characters(df):
     """
-    Counts the total number of characters in the columns 'question', 'response', and 'system_prompt' of a Polars DataFrame.
+    Counts the total number of characters in the columns 'question', 'response' of a Polars DataFrame.
 
     Parameters:
     df (polars.DataFrame): The dataframe to process.
@@ -168,7 +168,7 @@ def count_total_characters(df):
     int: The total number of characters in the specified columns.
     """
     # Check if the specified columns exist in the DataFrame
-    for column in ["question", "response", "system_prompt"]:
+    for column in ["question", "response"]:
         if column not in df.columns:
             raise ValueError(f"Column '{column}' not found in the DataFrame")
 
@@ -177,7 +177,7 @@ def count_total_characters(df):
         df.select(
             [
                 pl.col(column).str.len_chars().sum()
-                for column in ["question", "response", "system_prompt"]
+                for column in ["question", "response"]
             ]
         )
     )

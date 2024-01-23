@@ -17,11 +17,8 @@ def main(
 
     df = filter_data(
         df=df,
-        n_total=n_total,
-        instruction_sources=config.instruction_sources,
         common_postfixes=config.common_postfixes,
         common_prefixes=config.common_prefixes,
-        seed=seed,
     )
 
     df.write_parquet(config.data_dir / config.filtered_dataset_file_name)
