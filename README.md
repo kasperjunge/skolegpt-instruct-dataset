@@ -2,13 +2,8 @@
 <h1 align="center">
 <img src="logo.png" width="250">
 </h1>
-Code for creating the open source Danish dataset "skolegpt-instruct". The dataset can be use for Danish instruction fine-tuning of LLM's. The dataset is created by translating a subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
-The project consists of 3 components:
-
-1. OpenOrca sampling: sample_dataset.py
-2. Quality filtering: filter_dataset.py
-3. Danish translation: translate_dataset.py (the expensive one 💵)
+"skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is created by translating a subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
 ## Usage
 1. Sample OpenOrca dataset:
