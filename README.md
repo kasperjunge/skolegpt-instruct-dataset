@@ -1,9 +1,10 @@
-# SkoleGPT Instruct Dataset 🔥
 <h1 align="center">
-<img src="logo.png" width="250">
+<img src="logo.png" width="225">
 </h1>
 
-"skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is created by translating a subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
+## SkoleGPT Instruct Dataset
+
+"skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is translation of a quality filtered subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
 ## Usage
 1. Sample OpenOrca dataset:
@@ -16,12 +17,18 @@ poetry run python sample_dataset.py
 poetry run python filter_dataset.py
 ```
 
-3. Translate filterdd dataset:
+3. Stratification of sampled dataset by the OpenOrca sources: niv, flan, cot, t0:
+```bash
+poetry run python stratify_dataset.py
+```
+
+4. Translate filterd dataset:
 ```bash
 poetry run python translate_dataset.py
 ```
-# Dataset Description
-## Data
+
+# Dataset
+## Data Sampling
 The data extraction process involves loading and shuffling the [OpenOrca dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca), specifically the "1M-GPT4-Augmented.parquet" file. A specified number of entries are then selected to form a subset, which is organized into a DataFrame with an added "source" column for origin tracking. This results in a manageable and tailored subset of the dataset for analysis or further processing.
 
 ## Filtering
@@ -42,3 +49,5 @@ Below is an outline of these steps:
 6. **Remove Exotic Characters:** Filters out entries containing exotic characters in the "question" and "response" fields. The list of characters to filter is dynamically generated based on the dataset content.
 
 7. **Remove Duplicate Questions and Responses:** Eliminates duplicates in the dataset, ensuring uniqueness in both "question" and "response" fields.
+
+## Translation

@@ -10,7 +10,7 @@ def main(save_freq: int = 100):
         config.data_dir / config.stratified_dataset_file_name
     )
 
-    df = df.sample(25000, shuffle=True)
+    df = df.sample(len(df), shuffle=True)
 
     df_translated = translate_dataset(df, save_freq)
 
