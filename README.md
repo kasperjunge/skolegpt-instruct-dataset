@@ -7,6 +7,8 @@
 "skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is translation of a quality filtered subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
 ## Usage
+The project consist of 4 steps: sampling, filtering, stratification and translation. This project utilizes Poetry for dependency management, so you may need to install Poetry using pip install poetry if it's not already set up on your system.
+
 1. Sample OpenOrca dataset:
 ```bash
 poetry run python sample_dataset.py 
