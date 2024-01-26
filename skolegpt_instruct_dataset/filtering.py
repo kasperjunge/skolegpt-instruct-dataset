@@ -10,7 +10,7 @@ def filter_data(
     common_prefixes: list[str],
     common_postfixes: list[str],
 ) -> pl.DataFrame:
-    """Preprocess raw OpenOrca dataset."""
+    """Main function for filtering raw OpenOrca dataset."""
 
     original_dataset_size = len(df)
     print(

@@ -1,6 +1,8 @@
-# skolegpt-instruct-dataset 🔥
-
-Code for creating an open source Danish instruction dataset for fine-tuing Danish LLM's by translating a subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
+# SkoleGPT Instruct Dataset 🔥
+<h1 align="center">
+<img src="logo.png" width="250">
+</h1>
+Code for creating the open source Danish dataset "skolegpt-instruct". The dataset can be use for Danish instruction fine-tuning of LLM's. The dataset is created by translating a subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
 The project consists of 3 components:
 

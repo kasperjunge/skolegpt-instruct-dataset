@@ -11,7 +11,7 @@ class Config:
     sampled_dataset_file_name: str = "sampled_dataset.parquet"
     filtered_dataset_file_name: str = "filtered_dataset.parquet"
     stratified_dataset_file_name: str = "stratified_dataset.parquet"
-    translated_dataset: str = "translated_dataset.parquet"
+    translated_dataset_file_name: str = "translated_dataset.parquet"
     instruction_sources: list[str] = [
         "flan",
         "niv",
@@ -25,7 +25,6 @@ class Config:
         "Instructions:",
         "Q:",
         "Teacher:",
-        # new
         "Student:",
         "Write a sentence not in English.",
         "Denny asked:",
@@ -33,7 +32,7 @@ class Config:
         "Answer the following question:",
         "Given the question:",
         "Please answer the following question:",
-    ]
+    ]  # common instruction prefixes
     common_postfixes: list[str] = [
         "Answer:",
         "Solution:",
@@ -41,7 +40,6 @@ class Config:
         "Output:",
         "Teacher:",
         "Student:",
-        # new
         "Stream of thoughts:",
         "Step-by-step reasoning:",
         "Chain-of-thought:",
@@ -64,7 +62,7 @@ class Config:
         "Chain of thought:",
         "Your thoughts:",
         "Summary:",
-    ]
+    ]  # common instruction postfixes
 
 
 config = Config()

@@ -16,7 +16,7 @@ def main(save_freq: int = 100):
 
     print("Completed translating dataset.")
 
-    df_translated.write_parquet(config.data_dir / config.translated_dataset)
+    df_translated.write_parquet(config.data_dir / config.translated_dataset_file_name)
 
     breakpoint()
 
