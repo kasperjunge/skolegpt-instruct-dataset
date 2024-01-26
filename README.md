@@ -3,7 +3,6 @@
 </h1>
 
 ## SkoleGPT Instruct Dataset
-
 "skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is translation of a quality filtered subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
 ## Usage
@@ -29,11 +28,11 @@ poetry run python stratify_dataset.py
 poetry run python translate_dataset.py
 ```
 
-# Dataset
-## Data Sampling
+## Dataset
+### Data Sampling
 The data extraction process involves loading and shuffling the [OpenOrca dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca), specifically the "1M-GPT4-Augmented.parquet" file. A specified number of entries are then selected to form a subset, which is organized into a DataFrame with an added "source" column for origin tracking. This results in a manageable and tailored subset of the dataset for analysis or further processing.
 
-## Filtering
+### Filtering
 The filter_data function is designed to preprocess and filter the raw OpenOrca dataset. This process involves several steps, each targeting specific types of data or formatting issues within the dataset. 
 
 Below is an outline of these steps:
@@ -52,4 +51,5 @@ Below is an outline of these steps:
 
 7. **Remove Duplicate Questions and Responses:** Eliminates duplicates in the dataset, ensuring uniqueness in both "question" and "response" fields.
 
-## Translation
+### Translation
+The dataset translation is carried out via the DeepL service. This process necessitates having a DeepL account with a linked credit card. DeepL provides a free tier, allowing access to their API for translating up to 500,000 characters, which can be found [here](https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-Free). There are approximately 16 unique system prompts consistently used throughout all instructions. By translating only these unique system prompts instead of translating them for each row, we can significantly conserve character usage.
