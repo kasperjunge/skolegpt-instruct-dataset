@@ -2,6 +2,8 @@
 <img src="logo.png" width="225">
 </h1>
 
+**FIND THE MAIN REPO ON KØBENHAVNS PROFESSIONSHØJSKOLES GITHUB ORGANIZATOIN: https://github.com/Kobenhavns-Professionshojskole/skolegpt-instruct-dataset**
+
 ## SkoleGPT Instruct Dataset
 "skolegpt-instruct" is an open source dataset for Danish instruction fine-tuning of LLM's. The dataset is translation of a quality filtered subset of the [OpenOrca instruction dataset](https://huggingface.co/datasets/Open-Orca/OpenOrca). The project is a part of the [SkoleGPT project](https://skolegpt.dk/).
 
